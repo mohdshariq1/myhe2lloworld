@@ -1,0 +1,197 @@
+-Issue in EHCache
+1. 
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "task-runner-thread-2"
+        at com.bigmemory.benchmark.CacheOBJGetRunnable.run(CacheOBJGetRunnable.java:51)
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "pool-93-thread-18"
+
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "WorkerThread(local_cache_transaction_complete_stage, 1, 0)"
+
+net.sf.ehcache.CacheException: Uncaught exception in get() - com.tc.exception.TCNotRunningException: Terracotta is not running.
+        at org.terracotta.modules.ehcache.store.ClusteredSafeStore.get(ClusteredSafeStore.java:236)
+
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "WorkerThread(receive_invalidate_objects_stage, 0)"
+        at org.terracotta.modules.ehcache.store.nonstop.NonStopStoreWrapper.get(NonStopStoreWrapper.java:792)
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "WorkerThread(object_id_request_response_stage, 0)"
+
+        at net.sf.ehcache.Cache.get(Cache.java:1751)
+
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "WorkerThread(pinned_entry_fault_stage, 5, 0)"
+        at net.sf.ehcache.Cache.get(Cache.java:1724)
+        at com.bigmemory.benchmark.CacheOBJGetRunnable.run(CacheOBJGetRunnable.java:51)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1110)
+		
+		
+		
+2. Changing code and redeploying REQUIRES restart of cluster
+
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "task-runner-thread-2"
+        at com.bigmemory.benchmark.CacheOBJGetRunnable.run(CacheOBJGetRunnable.java:51)
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "pool-93-thread-18"
+
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "WorkerThread(local_cache_transaction_complete_stage, 1, 0)"
+
+net.sf.ehcache.CacheException: Uncaught exception in get() - com.tc.exception.TCNotRunningException: Terracotta is not running.
+        at org.terracotta.modules.ehcache.store.ClusteredSafeStore.get(ClusteredSafeStore.java:236)
+
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "WorkerThread(receive_invalidate_objects_stage, 0)"
+        at org.terracotta.modules.ehcache.store.nonstop.NonStopStoreWrapper.get(NonStopStoreWrapper.java:792)
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "WorkerThread(object_id_request_response_stage, 0)"
+
+        at net.sf.ehcache.Cache.get(Cache.java:1751)
+
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "WorkerThread(pinned_entry_fault_stage, 5, 0)"
+        at net.sf.ehcache.Cache.get(Cache.java:1724)
+        at com.bigmemory.benchmark.CacheOBJGetRunnable.run(CacheOBJGetRunnable.java:51)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1110)
+
+
+3. There is always a requirement of Mirror server ow it is not detected by TMC
+		
+		
+		
+		
+4. This issue comes after terracotta hangs....after this text...
+
+ 
+
+Email: mohdshariq@gmail.com
+Product: BigMemory Max
+Edition: FX
+Capabilities: authentication, ehcache, search, security, TMC, ehcache offheap, server array offheap, server striping, sessions, quartz, quar
+tz where, CLC, WAN
+Max Client Count: 200
+ehcache.maxOffHeap: 1T
+terracotta.serverArray.maxDataStorage: 1T
+
+Then error erupts
+
+
+2016-08-01 08:57:24,043 ERROR -
+*******************************************************************************
+Timeout occured while trying to get Server Version, No Active server Found for : 300000
+*******************************************************************************
+
+
+
+Fatal Terracotta startup exception:
+
+
+*******************************************************************************
+Timeout occured while trying to get Server Version, No Active server Found for : 300000
+*******************************************************************************
+
+
+Server startup failed.
+Exception in thread "main" net.sf.ehcache.CacheException: Unable to load class net.sf.ehcache.terracotta.ExpressEnterpriseTerracottaClustere
+dInstanceFactory. Initial cause was org.terracotta.toolkit.ToolkitInstantiationException: java.lang.RuntimeException: Unable to create toolk
+it.
+        at net.sf.ehcache.util.ClassLoaderUtil.createNewInstance(ClassLoaderUtil.java:90)
+        at net.sf.ehcache.terracotta.TerracottaClusteredInstanceHelper.newClusteredInstanceFactory(TerracottaClusteredInstanceHelper.java:15
+7)
+        at net.sf.ehcache.terracotta.TerracottaClient.createNewClusteredInstanceFactory(TerracottaClient.java:180)
+        at net.sf.ehcache.terracotta.TerracottaClient.createClusteredInstanceFactory(TerracottaClient.java:129)
+        at net.sf.ehcache.CacheManager.doInit(CacheManager.java:463)
+        at net.sf.ehcache.CacheManager.init(CacheManager.java:395)
+        at net.sf.ehcache.CacheManager.<init>(CacheManager.java:270)
+        at net.sf.ehcache.CacheManager.newInstance(CacheManager.java:1116)
+        at net.sf.ehcache.CacheManager.newInstance(CacheManager.java:1092)
+        at net.sf.ehcache.CacheManager.create(CacheManager.java:1075)
+        at com.bigmemory.benchmark.CacheOBJConcurrentGetEngineMultipeRunsWithTHREADSIZE.main(CacheOBJConcurrentGetEngineMultipeRunsWithTHREA
+DSIZE.java:95)
+Caused by: java.lang.RuntimeException: org.terracotta.toolkit.ToolkitInstantiationException: java.lang.RuntimeException: Unable to create to
+olkit.
+        at org.terracotta.modules.ehcache.TerracottaToolkitBuilder.createToolkit(TerracottaToolkitBuilder.java:65)
+        at org.terracotta.modules.ehcache.TerracottaToolkitBuilder.buildToolkit(TerracottaToolkitBuilder.java:58)
+        at org.terracotta.modules.ehcache.ToolkitInstanceFactoryImpl.createTerracottaToolkit(ToolkitInstanceFactoryImpl.java:183)
+        at org.terracotta.modules.ehcache.ToolkitInstanceFactoryImpl.<init>(ToolkitInstanceFactoryImpl.java:119)
+        at org.terracotta.modules.ehcache.ToolkitInstanceFactoryImpl.<init>(ToolkitInstanceFactoryImpl.java:129)
+        at org.terracotta.modules.ehcache.EnterpriseToolkitInstanceFactory.<init>(EnterpriseToolkitInstanceFactory.java:23)
+        at org.terracotta.modules.ehcache.store.EnterpriseTerracottaClusteredInstanceFactory.createToolkitInstanceFactory(EnterpriseTerracot
+taClusteredInstanceFactory.java:21)
+        at org.terracotta.modules.ehcache.store.TerracottaClusteredInstanceFactory.<init>(TerracottaClusteredInstanceFactory.java:65)
+        at org.terracotta.modules.ehcache.store.EnterpriseTerracottaClusteredInstanceFactory.<init>(EnterpriseTerracottaClusteredInstanceFac
+tory.java:15)
+        at net.sf.ehcache.terracotta.ExpressEnterpriseTerracottaClusteredInstanceFactory.<init>(ExpressEnterpriseTerracottaClusteredInstance
+Factory.java:11)
+        at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+        at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+        at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+        at java.lang.reflect.Constructor.newInstance(Constructor.java:525)
+        at net.sf.ehcache.util.ClassLoaderUtil.createNewInstance(ClassLoaderUtil.java:73)
+        ... 10 more
+Caused by: org.terracotta.toolkit.ToolkitInstantiationException: java.lang.RuntimeException: Unable to create toolkit.
+        at com.terracotta.toolkit.api.TerracottaToolkitFactoryService.createToolkit(TerracottaToolkitFactoryService.java:63)
+        at org.terracotta.toolkit.ToolkitFactory.create(ToolkitFactory.java:100)
+        at org.terracotta.toolkit.ToolkitFactory.createToolkit(ToolkitFactory.java:84)
+        at org.terracotta.modules.ehcache.TerracottaToolkitBuilder.createToolkit(TerracottaToolkitBuilder.java:63)
+        ... 24 more
+Caused by: java.lang.RuntimeException: Unable to create toolkit.
+        at com.terracotta.toolkit.client.TerracottaToolkitCreator.createToolkit(TerracottaToolkitCreator.java:95)
+        at com.terracotta.toolkit.api.EnterpriseTerracottaToolkitFactoryService.createToolkit(EnterpriseTerracottaToolkitFactoryService.java
+:17)
+        at com.terracotta.toolkit.api.TerracottaToolkitFactoryService.createToolkit(TerracottaToolkitFactoryService.java:58)
+        ... 27 more
+Caused by: java.lang.RuntimeException: java.lang.RuntimeException: java.lang.IllegalStateException:
+*******************************************************************************
+Timeout occured while trying to get Server Version, No Active server Found for : 300000
+*******************************************************************************
+
+        at com.terracotta.toolkit.express.TerracottaInternalClientImpl.init(TerracottaInternalClientImpl.java:101)
+        at com.terracotta.toolkit.client.TerracottaToolkitCreator.createInternalToolkit(TerracottaToolkitCreator.java:154)
+        at com.terracotta.toolkit.client.TerracottaToolkitCreator.createInternalToolkitSynchronously(TerracottaToolkitCreator.java:111)
+        at com.terracotta.toolkit.client.TerracottaToolkitCreator.createToolkit(TerracottaToolkitCreator.java:78)
+        ... 29 more
+Caused by: java.lang.RuntimeException: java.lang.IllegalStateException:
+*******************************************************************************
+Timeout occured while trying to get Server Version, No Active server Found for : 300000
+*******************************************************************************
+
+        at com.tc.lang.StartupHelper.startUp(StartupHelper.java:53)
+        at com.tc.object.DistributedObjectClientFactory.create(DistributedObjectClientFactory.java:157)
+        at com.terracotta.toolkit.express.CreateClient$ClientCreatorCallableImpl.call(CreateClient.java:123)
+        at com.terracotta.toolkit.express.TerracottaInternalClientImpl.init(TerracottaInternalClientImpl.java:93)
+        ... 32 more
+Caused by: java.lang.IllegalStateException:
+*******************************************************************************
+Timeout occured while trying to get Server Version, No Active server Found for : 300000
+*******************************************************************************
+
+        at com.tc.object.DistributedObjectClient.validateClientServerCompatibility(DistributedObjectClient.java:421)
+        at com.tc.object.DistributedObjectClient.start(DistributedObjectClient.java:433)
+        at com.tc.object.DistributedObjectClientFactory$2.execute(DistributedObjectClientFactory.java:138)
+        at com.tc.lang.StartupHelper.startUp(StartupHelper.java:50)
+        ... 35 more
+Caused by: com.tc.config.schema.setup.ConfigurationSetupException:
+*******************************************************************************
+Timeout occured while trying to get Server Version, No Active server Found for : 300000
+*******************************************************************************
+
+        at com.tc.object.config.StandardDSOClientConfigHelperImpl.validateClientServerCompatibility(StandardDSOClientConfigHelperImpl.java:3
+10)
+        at com.tc.object.DistributedObjectClient.validateClientServerCompatibility(DistributedObjectClient.java:418)
+        ... 38 more
+The filename, directory name, or volume label syntax is incorrect.
+
+G:\workspace\bigmemory-max-4.3.2.1.7\code-samples\example03-crud>run.bat
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		
