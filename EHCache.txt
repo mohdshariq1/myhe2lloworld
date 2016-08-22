@@ -1,4 +1,4 @@
--Issue in EHCache
+Issue in EHCache
 1. 
 Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "task-runner-thread-2"
         at com.bigmemory.benchmark.CacheOBJGetRunnable.run(CacheOBJGetRunnable.java:51)
@@ -40,6 +40,11 @@ Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler i
         at net.sf.ehcache.Cache.get(Cache.java:1751)
 
 Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "WorkerThread(pinned_entry_fault_stage, 5, 0)"
+
+
+
+
+
         at net.sf.ehcache.Cache.get(Cache.java:1724)
         at com.bigmemory.benchmark.CacheOBJGetRunnable.run(CacheOBJGetRunnable.java:51)
         at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1110)
@@ -173,6 +178,33 @@ Timeout occured while trying to get Server Version, No Active server Found for :
 The filename, directory name, or volume label syntax is incorrect.
 
 G:\workspace\bigmemory-max-4.3.2.1.7\code-samples\example03-crud>run.bat
+
+
+
+5. How to run ehcache 
+a)go to G:\workspace\bigmemory-max-4.3.2.1.7\code-samples\example03-crud and run start-sample-server-1.bat
+b)start-tmc.bat from the location G:\workspace\bigmemory-max-4.3.2.1.7\tools\management-console\bin
+c) TMC at http://localhost:9889/tmc/?
+d) run the program from run.bat after enabling proper commands G:\workspace\bigmemory-max-4.3.2.1.7\code-samples\example03-crud
+e) if you change anything then ..do a maven install on the folder G:\workspace\bigmemory-max-4.3.2.1.7\code-samples> 
+ensure that u have to close all server as you will get lock file error
+NFO] Final Memory: 12M/220M
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-assembly-plugin:2.3:single (attach-distribution) on project bigmemory-max-samples: Failed to create assembly: Error creating assembly archive distribution: Problem copying files : The process cannot access the file because another process has locked a portion of the file -> [Help 1]
+[ERROR]
+
+Also u may get this....set JAVA_HOME=""G:\Program Files\Java\jdk1.7.0_09""
+
+f) Connection refused error...couldnt load configuration error...
+The filename, directory name, or volume label syntax is incorrect.
+Aug 22, 2016 11:23:11 AM net.sf.ehcache.terracotta.TerracottaClient info
+INFO: Thread [main] [cacheManager: 'config']: Creating new ClusteredInstanceFactory
+2016-08-22 11:23:11,940 INFO - Terracotta Enterprise 4.3.2.1.7, as of 20160303-044618 (Revision 47333-26791 from tc-4.3.2)
+2016-08-22 11:23:13,168 WARN - We couldn't load configuration data from the server at 'localhost:9510'; retrying. (Error: Connection refused: connect.)
+2016-08-22 11:23:18,134 WARN - We couldn't load configuration data from the server at 'localhost:9510'; retrying. (Error: Connection refused: connect.)
+
+Fixed this error by starting 2 nodes....if 1 is there or vice versa
+
 
 
 
